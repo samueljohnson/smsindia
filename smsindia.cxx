@@ -1,5 +1,5 @@
 /*
- * qtsmsindia.cxx
+ * smsindia.cxx
  * 
  * Copyright 2012 Samuel Johnson <esamueljohnson@gmail.com>
  * 
@@ -31,7 +31,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
-//#include <pwd.h>
 #include "curl/curl.h"
 
 int main(int argc, char* argv[]){
@@ -55,6 +54,7 @@ int main(int argc, char* argv[]){
 	FILE *cp=fopen(configpath,"r");
 	//FILE *pp=fopen(phonebookpath,"r");
 	fgets(line,200,cp);
+	fgets(line,200,cp);
 	while(line[j+1]!='\0'){
 		uid[i++]=line[j++];
 	}
@@ -69,18 +69,9 @@ int main(int argc, char* argv[]){
 	CURL *curl;
 	CURLcode res;
 	curl = curl_easy_init();
-	//cout<<"Enter your username : ";
-	//cin.getline(uid,11);
-	//cout<<"Enter Password : ";
-	//cin.getline(pwd,20);
-	//cout<<"Enter Recipient Phone Number : ";
-	//cin.getline(phone,11);
-	//cout<<"To : "<<phone<<endl;
 	printf("To : %s \n",phone);
-	//cout<<"Enter your Message : ";
 	printf("Enter your Message : ");
 	//Following is the code to replace spaces with '%20'
-	//cin.getline(msg,141);
 	gets(msg);
 	for(i=0;msg[i]!='\0';i++){
 		if(msg[i]==' '){
@@ -96,7 +87,6 @@ int main(int argc, char* argv[]){
 			i--;
 		}
 	}
-	//http://ubaid.tk/sms/sms.aspx?uid=9787932732&pwd=wayyer&phone=9486684171&msg=%27Samuel%20Johnson%27&provider=way2sms
 	strcpy(url,"http://ubaid.tk/sms/sms.aspx?uid=");
 	strcat(url,uid);
 	strcat(url,"&pwd=");
@@ -106,14 +96,11 @@ int main(int argc, char* argv[]){
 	strcat(url,"&msg=");
 	strcat(url,msg);
 	strcat(url,"&provider=way2sms");
-	//strcpy(url,"http://ubaid.tk/sms/sms.aspx?uid=9787932732&pwd=wayyer&phone=9486684171&msg='Samuel'&provider=way2sms");
-	printf("%s\n\n",url);
-	//if(curl){
-		//curl_easy_setopt(curl, CURLOPT_URL, url);
-		//res = curl_easy_perform(curl);
-		////printf("Res is %d",res);
-		///* always cleanup */ 
-		//curl_easy_cleanup(curl);
-	//}
+	if(curl){
+		curl_easy_setopt(curl, CURLOPT_URL, url);
+		res = curl_easy_perform(curl);
+		/* always cleanup */ 
+		curl_easy_cleanup(curl);
+	}
 	return 0;
 }

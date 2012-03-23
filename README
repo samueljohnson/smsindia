@@ -1,1 +1,11 @@
 Sends SMS via way2sms.
+
+Enter your way2sms credentials in file named "config" in current working directory in following format
+
+begin
+uid=9xxxxxxxxx
+pwd=<password>
+end
+
+Prints 1 if succesfully transfered to way2sms.
+Delievry time depends on way2sms.
