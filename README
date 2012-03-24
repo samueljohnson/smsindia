@@ -7,5 +7,15 @@ uid=9xxxxxxxxx
 pwd=<password>
 end
 
+Enter the phonebook details in a file named "phonebook" in current working directory in following format
+
+<name>:<number>
+
+eg:
+
+dexter:9876543210
+deedee:9812345678
+
+
 Prints 1 if succesfully transfered to way2sms.
 Delievry time depends on way2sms.

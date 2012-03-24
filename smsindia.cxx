@@ -22,37 +22,40 @@
  * 
  */
 
-//TODO: Implement a simple text based phonebook.
+//TODO 1 : Implement a simple text based phonebook. : DONE
+//TODO 2 : Prompt to save new number in phonebook.
 
 #include <string.h>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include "curl/curl.h"
 
+int phonebook(char*, char*);
+
 int main(int argc, char* argv[]){
-	char uid[14],pwd[20],phone[11],msg[141],url[500],temp[150];
-	char configpath[15]="./config",phonebookpath[15]="./phonebook",line[30];
+	char uid[14],pwd[20],phone[11],msg[600],url[500],temp[150];
+	char configpath[15]="./config",line[30];
 	int i=0,j=4,k=0;
 	if(argc!=2){
 		printf("Usage : smsindia <Destination ten digt phone number>\n");
-		exit(-1);
-	}
-	strcpy(phone,argv[1]);
-	if(isalpha(argv[1][0])){
-		printf("Phone book not yet implemented!\n");
-		printf("For the time being, just enter the phone number\n\n");
 		return -1;
 	}
-	if(strlen(argv[1])!=10){
+	strcpy(phone,argv[1]);
+	if(strlen(argv[1])!=10&&isdigit(argv[1][0])){
 		printf("Enter 10 digit destination phone number\n\n");
 		return -1;
 	}
+	if(isalpha(argv[1][0])){
+		if(!phonebook(argv[1],phone)){
+			printf("Phone number not found\n");
+			return -1;
+		}
+	}
 	FILE *cp=fopen(configpath,"r");
-	//FILE *pp=fopen(phonebookpath,"r");
+	//
 	fgets(line,200,cp);
 	fgets(line,200,cp);
 	while(line[j+1]!='\0'){
@@ -73,6 +76,7 @@ int main(int argc, char* argv[]){
 	printf("Enter your Message : ");
 	//Following is the code to replace spaces with '%20'
 	gets(msg);
+	//fgets (msg, 140, stdin);
 	for(i=0;msg[i]!='\0';i++){
 		if(msg[i]==' '){
 			msg[i++]='%';
@@ -87,6 +91,20 @@ int main(int argc, char* argv[]){
 			i--;
 		}
 	}
+	//for(i=0;msg[i]!='\0';i++){
+		//if(msg[i]=='\n'){
+			//msg[i++]='%';
+			//for(k=i,j=0;msg[k]!='\0';k++,j++){
+				//temp[j]=msg[k];
+			//}
+			//temp[j]='\0';
+			//msg[i++]='0';
+			//msg[i++]='D';
+			//msg[i]='\0';
+			//strcat(msg,temp);
+			//i--;
+		//}
+	//}
 	strcpy(url,"http://ubaid.tk/sms/sms.aspx?uid=");
 	strcat(url,uid);
 	strcat(url,"&pwd=");
@@ -96,6 +114,7 @@ int main(int argc, char* argv[]){
 	strcat(url,"&msg=");
 	strcat(url,msg);
 	strcat(url,"&provider=way2sms");
+	puts(url);
 	if(curl){
 		curl_easy_setopt(curl, CURLOPT_URL, url);
 		res = curl_easy_perform(curl);
@@ -103,4 +122,23 @@ int main(int argc, char* argv[]){
 		curl_easy_cleanup(curl);
 	}
 	return 0;
+}
+
+int phonebook(char* name, char* phone){
+	char line[200],found=0;
+	int i,j;
+	FILE *pp=fopen("./phonebook","r");
+	while(fgets(line,200,pp)){
+		if(strstr(line,name)){
+			printf("%s\n",line);
+			for(i=0;line[i]!=':';i++);
+			i++;
+			for(j=0;line[i]!='\n';i++,j++)
+				phone[j]=line[i];
+			phone[j]='\0';
+			found=1;
+			break;
+		}
+	}
+	return found;
 }
